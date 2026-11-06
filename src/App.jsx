@@ -36,9 +36,13 @@ export default function App() {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
-      const fitW = (screenW * 0.82) / (model.width || 414);
-      const fitH = (screenH * 0.52) / (model.height || 874);
-      return Math.min(0.58, Math.max(0.32, +Math.min(fitW, fitH).toFixed(2)));
+      // Net vertical stage space available between 2-row navbar (~96px) and floating HUD (~56px) + margin (40px)
+      const availH = Math.max(260, screenH - 192);
+      const availW = Math.max(240, screenW - 32);
+      const fitH = (availH * 0.86) / (model.height || 700);
+      const fitW = (availW * 0.90) / (model.width || 340);
+      const computed = Math.min(fitH, fitW);
+      return Math.min(0.46, Math.max(0.26, +computed.toFixed(2)));
     }
     return model.defaultScale || 0.85;
   };
@@ -126,7 +130,14 @@ export default function App() {
 
   useEffect(() => {
     setScale(calculateFitScale(currentModel));
-  }, [currentModel.id]);
+    const handleResize = () => {
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        setScale(calculateFitScale(currentModel));
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [currentModel]);
 
   useEffect(() => {
     async function loadRecordings() {
@@ -278,7 +289,7 @@ export default function App() {
 
   return (
     <div
-      className={`flex flex-col h-screen w-screen overflow-hidden transition-colors duration-200 ${
+      className={`flex flex-col h-screen w-full max-w-full overflow-hidden transition-colors duration-200 ${
         isDark ? 'bg-neutral-950 text-neutral-100' : 'bg-neutral-50 text-neutral-900'
       }`}
     >
@@ -382,6 +393,7 @@ export default function App() {
             isRecording={isRecording}
             isCleanStudio={isCleanStudio}
             handConfig={handConfig}
+            calculateFitScale={() => calculateFitScale(currentModel)}
           />
         </main>
       </div>

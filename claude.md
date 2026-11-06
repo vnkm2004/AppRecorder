@@ -507,3 +507,24 @@
      - Arranged in a clean 2x3 grid in the sidebar.
 
 
+### 31. Mobile Responsive Viewport Hardening (No Overflows, Centered Fit Scale & Compact Touch HUD)
+- **Root Causes Identified from Mobile Screenshot (`360 x 800`)**:
+  1. The 3D phone model on mobile was rendering at desktop scale (0.85) when resizing or testing in responsive mode, causing the top speaker to be submerged under the navbar and the bottom of the device to be clipped behind the HUD.
+  2. The bottom floating HUD contained "Drag to Rotate 3D" text, verbose "3D Spin" labels, and a desktop "100% HD" button (which sets scale to 1.0, breaking mobile viewports), pushing the HUD beyond the 360px screen boundary.
+  3. The top navbar URL input and buttons needed optimization for small 320px-360px widths so that `Screenshot`, `Load`, and demos dropdown never crowd or clip.
+- **Solutions Implemented**:
+  1. **Dynamic Headroom & Footroom Auto-Scaling in `App.jsx`**:
+     - `calculateFitScale` now computes scale based on available vertical viewport height (`window.innerHeight - 192px` headroom for navbar and HUD) and available width (`window.innerWidth - 32px`), dynamically setting a proportional scale (capped at `0.46`).
+     - Added an active `resize` listener so switching into mobile view (or testing in DevTools at 360x800) instantly auto-scales the phone with generous breathing room above and below.
+  2. **Compact Centered Mobile HUD in `DeviceStage.jsx`**:
+     - Hid the bulky "Drag to Rotate 3D" text on mobile and tablet screens (`hidden md:flex`).
+     - Replaced the desktop "100% HD" button on mobile with a smart **"Fit"** button that resets scale directly to `calculateFitScale`.
+     - Compact icon-first layouts for 3D Spin, Reset, Glare, Zoom Out, Percentage, and Zoom In.
+     - Enforced `max-w-[calc(100vw-16px)] mx-auto px-2 py-1` ensuring the HUD is cleanly centered and never leaves the screen.
+  3. **Responsive Header Optimization in `Navbar.jsx`**:
+     - Row 1: Brand title `truncate max-w-[110px]` with compact `p-1.5` action buttons for theme, vault, and record, fitting screens down to 320px width.
+     - Row 2: URL input with truncated text, compact `h-6` Load and Demos buttons, and a clean square 32px icon button for Screenshot upload on mobile (`hidden md:inline Screenshot`).
+     - Root wrapper changed from `w-screen` to `w-full max-w-full overflow-hidden`, completely eliminating horizontal body scroll.
+
+
+

@@ -34,6 +34,7 @@ export default function DeviceStage({
   isCleanStudio = false,
   handConfig = null,
   onResetAngle = null,
+  calculateFitScale = null,
 }) {
   const [pitch, setPitch] = useState(viewAngle.pitch || 0);
   const [yaw, setYaw] = useState(viewAngle.yaw || 0);
@@ -219,15 +220,15 @@ export default function DeviceStage({
       {/* Floating 3D Navigation Controls HUD (Hidden during recording and clean studio mode) */}
       {!isRecording && !isCleanStudio && (
         <div
-          className={`absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 flex items-center space-x-1 md:space-x-1.5 p-1.5 rounded-2xl border shadow-2xl z-30 font-mono text-xs transition-colors max-w-[95vw] overflow-x-auto no-scrollbar ${
+          className={`absolute bottom-2.5 md:bottom-5 left-1/2 -translate-x-1/2 flex items-center space-x-1 md:space-x-1.5 p-1 md:p-1.5 rounded-2xl border shadow-2xl z-30 font-mono text-xs transition-colors max-w-[calc(100vw-16px)] overflow-x-auto no-scrollbar shrink-0 select-none ${
             isDark
               ? 'glass-panel-dark border-white/10 text-white'
               : 'glass-panel-light border-black/10 text-neutral-900'
           }`}
         >
-          {/* Drag Hint (Icon only on mobile, text on sm+) */}
+          {/* Drag Hint (Hidden on mobile and tablet) */}
           <div
-            className={`hidden sm:flex items-center space-x-1.5 px-3 py-1 rounded-xl text-[11px] shrink-0 ${
+            className={`hidden md:flex items-center space-x-1.5 px-3 py-1 rounded-xl text-[11px] shrink-0 ${
               isDark ? 'bg-white/5 text-neutral-300' : 'bg-black/5 text-neutral-700'
             }`}
           >
@@ -238,7 +239,7 @@ export default function DeviceStage({
           {/* 3D Continuous Spin Toggle */}
           <button
             onClick={() => setIsTurntableActive(!isTurntableActive)}
-            className={`flex items-center space-x-1.5 px-3 py-1 rounded-xl transition-all ${
+            className={`flex items-center space-x-1 p-1.5 sm:px-3 sm:py-1 rounded-xl transition-all ${
               isTurntableActive
                 ? isDark
                   ? 'bg-white text-black font-semibold'
@@ -254,7 +255,7 @@ export default function DeviceStage({
             ) : (
               <Play className="w-3.5 h-3.5" />
             )}
-            <span>{isTurntableActive ? 'Stop Spin' : '3D Spin'}</span>
+            <span className="hidden sm:inline text-[11px]">{isTurntableActive ? 'Stop' : '3D Spin'}</span>
           </button>
 
           {/* Reset Angle Button */}
@@ -285,12 +286,12 @@ export default function DeviceStage({
             <Sparkles className="w-3.5 h-3.5" />
           </button>
 
-          <div className={`w-[1px] h-4 my-auto ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
+          <div className={`w-[1px] h-4 my-auto shrink-0 ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
 
-          {/* 100% Native HD Crisp Button */}
+          {/* Desktop: 100% Native HD Crisp Button */}
           <button
             onClick={() => setScale(1.0)}
-            className={`px-2 py-1 rounded-xl text-[11px] font-semibold transition-all ${
+            className={`hidden sm:inline-block px-2 py-1 rounded-xl text-[11px] font-semibold transition-all shrink-0 ${
               scale === 1.0
                 ? isDark
                   ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
@@ -304,20 +305,31 @@ export default function DeviceStage({
             100% HD
           </button>
 
+          {/* Mobile: Reset to Optimal Fit Scale Button */}
+          <button
+            onClick={() => setScale(calculateFitScale ? calculateFitScale() : (deviceModel.defaultScale || 0.85))}
+            className={`sm:hidden px-2 py-1 rounded-xl text-[10px] font-semibold transition-all shrink-0 ${
+              isDark ? 'bg-white/10 text-neutral-200' : 'bg-black/5 text-neutral-800'
+            }`}
+            title="Reset to Optimal Screen Fit"
+          >
+            Fit
+          </button>
+
           {/* Zoom Out */}
           <button
             onClick={() => handleZoom(-0.05)}
-            className={`p-1.5 rounded-xl transition-colors ${
+            className={`p-1.5 rounded-xl transition-colors shrink-0 ${
               isDark ? 'bg-white/5 hover:bg-white/10 text-neutral-300' : 'bg-black/5 hover:bg-black/10 text-neutral-700'
             }`}
             title="Zoom Out"
           >
-            <ZoomOut className="w-3.5 h-3.5" />
+            <ZoomOut className="w-3 h-3 md:w-3.5 md:h-3.5" />
           </button>
 
           <span
-            onClick={() => setScale(deviceModel.defaultScale || 0.85)}
-            className="text-[11px] font-semibold px-1 min-w-[36px] text-center cursor-pointer hover:underline"
+            onClick={() => setScale(calculateFitScale ? calculateFitScale() : (deviceModel.defaultScale || 0.85))}
+            className="text-[10px] md:text-[11px] font-semibold px-0.5 min-w-[32px] text-center cursor-pointer hover:underline shrink-0"
             title="Click to reset to optimal fit scale"
           >
             {Math.round(scale * 100)}%
@@ -326,12 +338,12 @@ export default function DeviceStage({
           {/* Zoom In */}
           <button
             onClick={() => handleZoom(0.05)}
-            className={`p-1.5 rounded-xl transition-colors ${
+            className={`p-1.5 rounded-xl transition-colors shrink-0 ${
               isDark ? 'bg-white/5 hover:bg-white/10 text-neutral-300' : 'bg-black/5 hover:bg-black/10 text-neutral-700'
             }`}
             title="Zoom In (up to 200%)"
           >
-            <ZoomIn className="w-3.5 h-3.5" />
+            <ZoomIn className="w-3 h-3 md:w-3.5 md:h-3.5" />
           </button>
         </div>
       )}

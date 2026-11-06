@@ -92,12 +92,12 @@ export default function Navbar({
       }`}
     >
       {/* Mobile Top Row / Desktop Left Group */}
-      <div className="w-full md:w-auto flex items-center justify-between">
+      <div className="w-full md:w-auto flex items-center justify-between gap-1">
         {/* Brand & Sidebar Toggle */}
-        <div className="flex items-center space-x-2.5">
+        <div className="flex items-center space-x-2 shrink-0">
           <button
             onClick={toggleSidebar}
-            className={`p-2 rounded-xl transition-colors ${
+            className={`p-1.5 md:p-2 rounded-xl transition-colors shrink-0 ${
               isDark ? 'glass-btn-dark' : 'glass-btn-light'
             }`}
             title="Toggle Controls Sidebar"
@@ -105,9 +105,9 @@ export default function Navbar({
             <Sliders className="w-4 h-4" />
           </button>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5">
             <div
-              className={`w-7 h-7 md:w-8 md:h-8 rounded-xl border flex items-center justify-center font-bold font-mono text-xs md:text-sm ${
+              className={`w-7 h-7 md:w-8 md:h-8 rounded-xl border flex items-center justify-center font-bold font-mono text-xs md:text-sm shrink-0 ${
                 isDark
                   ? 'bg-neutral-900 border-white/20 text-white'
                   : 'bg-neutral-100 border-black/15 text-neutral-900'
@@ -115,46 +115,44 @@ export default function Navbar({
             >
               AR
             </div>
-            <div>
-              <div className="flex items-center space-x-1.5">
-                <span className="font-bold tracking-tight text-xs md:text-sm font-mono">AppRecorder</span>
-                <span
-                  className={`text-[9px] md:text-[10px] font-mono px-1.5 py-0.5 rounded border ${
-                    isDark
-                      ? 'bg-white/10 text-neutral-300 border-white/15'
-                      : 'bg-black/5 text-neutral-700 border-black/10'
-                  }`}
-                >
-                  3D
-                </span>
-              </div>
+            <div className="flex items-center space-x-1">
+              <span className="font-bold tracking-tight text-xs md:text-sm font-mono truncate max-w-[110px] sm:max-w-none">AppRecorder</span>
+              <span
+                className={`text-[9px] md:text-[10px] font-mono px-1 py-0.5 rounded border shrink-0 ${
+                  isDark
+                    ? 'bg-white/10 text-neutral-300 border-white/15'
+                    : 'bg-black/5 text-neutral-700 border-black/10'
+                }`}
+              >
+                3D
+              </span>
             </div>
           </div>
         </div>
 
         {/* Mobile-only Action Buttons */}
-        <div className="flex items-center space-x-1.5 md:hidden">
+        <div className="flex items-center space-x-1 sm:space-x-1.5 md:hidden shrink-0">
           <button
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className={`p-2 rounded-xl transition-colors ${
+            className={`p-1.5 rounded-lg transition-colors shrink-0 ${
               isDark ? 'glass-btn-dark' : 'glass-btn-light'
             }`}
             title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
           >
-            {isDark ? <Sun className="w-4 h-4 text-neutral-300" /> : <Moon className="w-4 h-4 text-neutral-700" />}
+            {isDark ? <Sun className="w-3.5 h-3.5 text-neutral-300" /> : <Moon className="w-3.5 h-3.5 text-neutral-700" />}
           </button>
 
           <button
             onClick={onOpenGallery}
-            className={`p-2 rounded-xl text-xs font-mono font-medium flex items-center space-x-1 transition-colors ${
+            className={`p-1.5 rounded-lg text-xs font-mono font-medium flex items-center space-x-1 transition-colors shrink-0 ${
               isDark ? 'glass-btn-dark' : 'glass-btn-light'
             }`}
             title="Local Saved Videos Vault"
           >
-            <Film className="w-4 h-4 opacity-70" />
+            <Film className="w-3.5 h-3.5 opacity-70" />
             {savedRecordingsCount > 0 && (
               <span
-                className={`w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center ${
+                className={`w-3.5 h-3.5 rounded-full text-[8px] font-bold flex items-center justify-center ${
                   isDark ? 'bg-white text-black' : 'bg-black text-white'
                 }`}
               >
@@ -166,7 +164,7 @@ export default function Navbar({
           {isRecording ? (
             <button
               onClick={onStopRecordClick}
-              className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-mono font-bold flex items-center space-x-1.5 shadow-lg shadow-red-600/30 animate-pulse"
+              className="px-2.5 py-1 rounded-lg bg-red-600 hover:bg-red-500 text-white text-[11px] font-mono font-bold flex items-center space-x-1 shadow-md shadow-red-600/30 animate-pulse shrink-0"
             >
               <div className="w-2 h-2 rounded-sm bg-white" />
               <span>Stop</span>
@@ -174,12 +172,12 @@ export default function Navbar({
           ) : (
             <button
               onClick={onStartRecordClick}
-              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center space-x-1.5 shadow-md ${
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center space-x-1 shadow-sm shrink-0 ${
                 isDark ? 'bg-white text-black' : 'bg-neutral-900 text-white'
               }`}
             >
-              <div className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-              <Video className="w-3.5 h-3.5" />
+              <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+              <Video className="w-3 h-3" />
               <span>Record</span>
             </button>
           )}
@@ -188,32 +186,32 @@ export default function Navbar({
 
       {/* Center URL Bar & Content Switchers (100% Direct, Zero Proxy) */}
       <div className="w-full md:flex-1 md:max-w-2xl md:mx-4">
-        <form onSubmit={handleSubmit} className="relative flex items-center space-x-2">
-          <div className="relative flex-1 flex items-center">
+        <form onSubmit={handleSubmit} className="relative flex items-center space-x-1.5 md:space-x-2">
+          <div className="relative flex-1 flex items-center min-w-0">
             <div
-              className={`absolute left-3 pointer-events-none flex items-center ${
+              className={`absolute left-2.5 md:left-3 pointer-events-none flex items-center ${
                 isDark ? 'text-neutral-500' : 'text-neutral-400'
               }`}
             >
-              <Globe className="w-4 h-4" />
+              <Globe className="w-3.5 h-3.5 md:w-4 md:h-4" />
             </div>
 
             <input
               type="text"
               value={inputUrl}
               onChange={(e) => setInputUrl(e.target.value)}
-              placeholder="Enter website URL (e.g. servcate.com, google.com)..."
-              className={`w-full h-9 md:h-10 pl-9 pr-24 rounded-xl text-xs font-mono border focus:outline-none transition-all ${
+              placeholder="Enter URL (servcate.com)..."
+              className={`w-full h-8 md:h-10 pl-8 md:pl-9 pr-20 md:pr-24 rounded-xl text-[11px] md:text-xs font-mono border focus:outline-none transition-all truncate ${
                 isDark
                   ? 'bg-neutral-900/90 text-neutral-100 placeholder-neutral-500 border-white/10 focus:border-white/40'
                   : 'bg-white text-neutral-900 placeholder-neutral-400 border-black/10 focus:border-black/30'
               }`}
             />
 
-            <div className="absolute right-1.5 flex items-center space-x-1">
+            <div className="absolute right-1 md:right-1.5 flex items-center space-x-1">
               <button
                 type="submit"
-                className={`h-7 px-3 text-xs font-semibold rounded-lg transition-colors font-mono ${
+                className={`h-6 md:h-7 px-2 md:px-3 text-[11px] md:text-xs font-semibold rounded-lg transition-colors font-mono shrink-0 ${
                   isDark
                     ? 'bg-white text-black hover:bg-neutral-200'
                     : 'bg-neutral-900 text-white hover:bg-neutral-800'
@@ -227,7 +225,7 @@ export default function Navbar({
                 <button
                   type="button"
                   onClick={() => setShowPresetsMenu(!showPresetsMenu)}
-                  className={`h-7 px-2 rounded-lg flex items-center space-x-1 text-xs border ${
+                  className={`h-6 md:h-7 px-1.5 md:px-2 rounded-lg flex items-center space-x-0.5 text-xs border shrink-0 ${
                     isDark
                       ? 'border-white/10 hover:bg-white/10 text-neutral-300'
                       : 'border-black/10 hover:bg-black/5 text-neutral-700'
@@ -306,7 +304,7 @@ export default function Navbar({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className={`h-9 md:h-10 px-2.5 md:px-3 rounded-xl border flex items-center space-x-1.5 text-xs font-mono transition-colors shrink-0 ${
+            className={`h-8 w-8 md:w-auto md:h-10 p-0 md:px-3 rounded-xl border flex items-center justify-center md:space-x-1.5 text-xs font-mono transition-colors shrink-0 ${
               contentType === 'image'
                 ? isDark
                   ? 'bg-white text-black font-semibold'
@@ -318,7 +316,7 @@ export default function Navbar({
             title="Upload app screenshot or design image"
           >
             <ImageIcon className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Screenshot</span>
+            <span className="hidden md:inline">Screenshot</span>
           </button>
         </form>
       </div>
