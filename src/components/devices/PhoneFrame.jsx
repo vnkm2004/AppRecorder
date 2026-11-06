@@ -29,6 +29,7 @@ export default function PhoneFrame({
   const depth = model.depth || 18;
   const halfDepth = depth / 2;
   const radius = model.borderRadius || 46;
+  const isBlack = material.id === 'space-black';
   const activeIs3D =
     typeof is3D === 'boolean'
       ? is3D
@@ -381,20 +382,36 @@ export default function PhoneFrame({
           )}
 
           {/* Minimal Centered Logo */}
-          <div className="self-center flex items-center justify-center opacity-40">
+          <div className="self-center flex items-center justify-center">
             {isPixel ? (
-              <div className="w-7 h-7 rounded-full border border-white/40 flex items-center justify-center font-bold text-xs font-sans">
+              <div
+                className={`w-7 h-7 rounded-full border flex items-center justify-center font-bold text-xs font-sans ${
+                  isBlack ? 'border-white/40 text-white/80' : 'border-black/50 text-black/80'
+                }`}
+              >
                 G
               </div>
             ) : (
-              <div className="w-8 h-8 rounded-full border border-white/20 bg-white/5 flex items-center justify-center shadow-inner">
-                <div className="w-2.5 h-2.5 rounded-full bg-white/40" />
+              <div
+                className={`w-8 h-8 rounded-full border flex items-center justify-center shadow-inner ${
+                  isBlack ? 'border-white/30 bg-white/10' : 'border-black/30 bg-black/5'
+                }`}
+              >
+                <div
+                  className={`w-2.5 h-2.5 rounded-full ${
+                    isBlack ? 'bg-white/60' : 'bg-black/60'
+                  }`}
+                />
               </div>
             )}
           </div>
 
-          {/* Regulatory Text */}
-          <div className="self-center text-[9px] font-mono opacity-20 uppercase tracking-widest">
+          {/* Regulatory Branding Text */}
+          <div
+            className={`self-center text-[10px] font-mono font-medium uppercase tracking-[0.2em] ${
+              isBlack ? 'text-white/60' : 'text-black/60'
+            }`}
+          >
             AppRecorder 3D
           </div>
         </div>

@@ -17,6 +17,7 @@ export default function DesktopFrame({
   const depth = model.depth || 22;
   const halfDepth = depth / 2;
   const radius = model.borderRadius || 14;
+  const isBlack = material.id === 'space-black';
   const activeIs3D =
     typeof is3D === 'boolean'
       ? is3D
@@ -154,7 +155,7 @@ export default function DesktopFrame({
         {/* BACK FACE (Solid Aluminum Rear Enclosure, rendered strictly in 3D so it never covers the front screen in 2D) */}
         {activeIs3D && (
           <div
-            className={`absolute inset-0 ${material.backClass} rounded-[${radius}px] border border-white/10 shadow-2xl flex flex-col justify-between p-6 backface-hidden`}
+            className={`absolute inset-0 ${material.backClass} rounded-[${radius}px] border ${isBlack ? 'border-white/10' : 'border-black/10'} shadow-2xl flex flex-col justify-between p-6 backface-hidden`}
             style={{
               transform: `rotateY(180deg) translateZ(${halfDepth}px)`,
               backfaceVisibility: 'hidden',
@@ -163,12 +164,25 @@ export default function DesktopFrame({
             }}
           >
             {/* Top Airflow Grille */}
-            <div className="w-3/4 mx-auto h-1.5 bg-black/40 rounded-full border border-white/5" />
+            <div className={`w-3/4 mx-auto h-1.5 ${isBlack ? 'bg-black/40 border-white/5' : 'bg-black/20 border-black/10'} rounded-full border`} />
 
             {/* Logo & Stand Mount Knuckle */}
             <div className="flex flex-col items-center justify-center space-y-3">
-              <div className="w-12 h-12 rounded-full border border-white/20 bg-white/5 flex items-center justify-center shadow-inner">
-                <div className="w-4 h-4 rounded-full bg-white/20" />
+              <div
+                className={`w-12 h-12 rounded-full border flex items-center justify-center shadow-inner ${
+                  isBlack ? 'border-white/30 bg-white/10' : 'border-black/30 bg-black/5'
+                }`}
+              >
+                <div
+                  className={`w-4 h-4 rounded-full ${isBlack ? 'bg-white/60' : 'bg-black/60'}`}
+                />
+              </div>
+              <div
+                className={`text-[10px] font-mono font-medium uppercase tracking-[0.2em] ${
+                  isBlack ? 'text-white/60' : 'text-black/60'
+                }`}
+              >
+                AppRecorder 3D
               </div>
 
               <div className="w-16 h-8 rounded-lg bg-neutral-950 border border-white/10 shadow-lg flex items-center justify-center">

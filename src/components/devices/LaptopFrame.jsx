@@ -19,6 +19,7 @@ export default function LaptopFrame({
   const halfDepth = depth / 2;
   const lidDepth = 12;
   const halfLid = lidDepth / 2;
+  const isBlack = material.id === 'space-black';
   const activeIs3D =
     typeof is3D === 'boolean'
       ? is3D
@@ -83,15 +84,28 @@ export default function LaptopFrame({
           <>
             {/* BACK FACE (Solid Aluminum Display Lid with Logo) */}
             <div
-              className={`absolute inset-0 ${material.backClass} rounded-t-[16px] border border-white/10 shadow-2xl flex items-center justify-center backface-hidden`}
+              className={`absolute inset-0 ${material.backClass} rounded-t-[16px] border ${isBlack ? 'border-white/10' : 'border-black/10'} shadow-2xl flex flex-col items-center justify-center space-y-3 backface-hidden`}
               style={{
                 transform: `rotateY(180deg) translateZ(${halfLid}px)`,
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
               }}
             >
-              <div className="w-10 h-10 rounded-full border border-white/20 bg-white/5 flex items-center justify-center shadow-inner">
-                <div className="w-3 h-3 rounded-full bg-white/20" />
+              <div
+                className={`w-10 h-10 rounded-full border flex items-center justify-center shadow-inner ${
+                  isBlack ? 'border-white/30 bg-white/10' : 'border-black/30 bg-black/5'
+                }`}
+              >
+                <div
+                  className={`w-3 h-3 rounded-full ${isBlack ? 'bg-white/60' : 'bg-black/60'}`}
+                />
+              </div>
+              <div
+                className={`text-[10px] font-mono font-medium uppercase tracking-[0.2em] ${
+                  isBlack ? 'text-white/60' : 'text-black/60'
+                }`}
+              >
+                AppRecorder 3D
               </div>
             </div>
 

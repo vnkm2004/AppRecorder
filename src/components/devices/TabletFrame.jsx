@@ -19,6 +19,7 @@ export default function TabletFrame({
   const depth = model.depth || 16;
   const halfDepth = depth / 2;
   const radius = model.borderRadius || 24;
+  const isBlack = material.id === 'space-black';
   const activeIs3D =
     typeof is3D === 'boolean'
       ? is3D
@@ -199,7 +200,7 @@ export default function TabletFrame({
       {/* 7. BACK FACE (Solid Aluminum Rear Enclosure, rendered strictly in 3D so it never covers the front screen in 2D) */}
       {activeIs3D && (
         <div
-          className={`absolute inset-0 ${material.backClass} rounded-[${radius}px] border border-white/10 shadow-2xl flex flex-col justify-between p-6 backface-hidden`}
+          className={`absolute inset-0 ${material.backClass} rounded-[${radius}px] border ${isBlack ? 'border-white/10' : 'border-black/10'} shadow-2xl flex flex-col justify-between p-6 backface-hidden`}
           style={{
             borderRadius: `${radius}px`,
             transform: `rotateY(180deg) translateZ(${halfDepth}px)`,
@@ -216,9 +217,24 @@ export default function TabletFrame({
             </div>
           </div>
 
-          {/* Center Logo */}
-          <div className="self-center w-10 h-10 rounded-full border border-white/20 bg-white/5 flex items-center justify-center shadow-inner">
-            <div className="w-3 h-3 rounded-full bg-white/20" />
+          {/* Center Logo & Branding */}
+          <div className="self-center flex flex-col items-center justify-center space-y-3">
+            <div
+              className={`w-10 h-10 rounded-full border flex items-center justify-center shadow-inner ${
+                isBlack ? 'border-white/30 bg-white/10' : 'border-black/30 bg-black/5'
+              }`}
+            >
+              <div
+                className={`w-3 h-3 rounded-full ${isBlack ? 'bg-white/60' : 'bg-black/60'}`}
+              />
+            </div>
+            <div
+              className={`text-[10px] font-mono font-medium uppercase tracking-[0.2em] ${
+                isBlack ? 'text-white/60' : 'text-black/60'
+              }`}
+            >
+              AppRecorder 3D
+            </div>
           </div>
 
           {/* Smart Connector Pins */}

@@ -415,3 +415,18 @@
   3. **Updated `.gitignore` & Documentation**:
      - Added `.vercel` to `.gitignore`.
      - Added Vercel deployment documentation to `README.md`.
+
+
+### 27. Dynamic Rear Branding & Logo Contrast Adaptation
+- **Root Cause Identified**:
+  - On the 3D rear chassis of device frames, the centered hardware logo and regulatory text (`AppRecorder 3D`) previously used static white styles (`border-white/20`, `bg-white/5`, `bg-white/40`, and faint `opacity-20`).
+  - When switching chassis finishes from Space Black to Ceramic White, Pure Silver, or Natural Titanium, the white text and borders became invisible against the white and light metallic backgrounds.
+- **Solution Implemented**:
+  1. **Dynamic Contrast Switching**:
+     - Evaluated `isBlack = material.id === 'space-black'`.
+     - In Space Black (`isBlack === true`), the text is styled white (`text-white/60`) and the logo is rendered with white accents (`border-white/30`, `bg-white/10`, inner dot `bg-white/60`).
+     - In all other finishes (`isBlack === false` - Ceramic White, Pure Silver, Natural Titanium, Liquid Glass), the text is rendered black (`text-black/60`) and the logo is rendered with crisp dark accents (`border-black/30`, `bg-black/5`, inner dot `bg-black/60`, and `border-black/50 text-black/80` for Pixel emblems).
+  2. **Applied Across All Device Frames**:
+     - Updated `PhoneFrame.jsx`, `TabletFrame.jsx`, `LaptopFrame.jsx`, and `DesktopFrame.jsx` for consistent branding contrast and laser-etched visual fidelity.
+  3. **Verified Production Build**:
+     - Verified with `npm run build`, ensuring zero syntax errors and clean bundle compilation.
