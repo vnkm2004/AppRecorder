@@ -23,3 +23,16 @@ npm run dev
 npm run build
 npm start
 ```
+
+## Deployment
+
+### Vercel
+AppRecorder is fully configured for Vercel deployment out of the box via `vercel.json` and `/api/proxy.js`:
+- Framework: Vite
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Serverless Functions: `api/proxy.js`
+
+### Netlify
+Configured via `netlify.toml` and `netlify/functions/proxy.js`.
+

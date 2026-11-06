@@ -396,3 +396,22 @@
   4. Created root commit on `main` branch.
   5. Configured remote `origin` pointing to `https://github.com/vnkm2004/AppRecorder.git`.
   6. Successfully pushed `main` branch with upstream tracking to GitHub.
+
+
+### 26. Vercel Deployment Configuration & Serverless Proxy Adaptation
+- **Context & Objectives**:
+  - The project is deployed to Vercel directly from the GitHub repository (`https://github.com/vnkm2004/AppRecorder.git`).
+  - Previously, serverless proxy routing and rewriting relied strictly on Netlify-specific configurations (`netlify.toml` and `netlify/functions/proxy.js`).
+  - On Vercel, requests to `/api/proxy` or dynamic chunks (`/api/*.js`) would fail with 404 without standard Vercel serverless function paths and rewrite definitions.
+- **Changes Implemented**:
+  1. **Vercel Serverless Function (`api/proxy.js`)**:
+     - Created `api/proxy.js` supporting both standard Node.js serverless handlers (`(req, res)`) and Web standard Request/Response handlers.
+     - Implemented full frame injection with smart bidirectional scroll target resolution, finger touchscreen gestures, device pixel ratio emulation, anti-framing header stripping, and dynamic asset proxying.
+  2. **Vercel Configuration (`vercel.json`)**:
+     - Configured `buildCommand` (`npm run build`) and `outputDirectory` (`dist`).
+     - Added URL rewrites routing `/api/proxy`, `/api/proxy/:path*`, and `/api/:path*` directly to the `api/proxy` serverless function.
+     - Added SPA fallback rewrite `/(.*) -> /index.html` for client-side routing.
+     - Added security headers (`X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`) and long-term immutable caching headers for `/assets/*`.
+  3. **Updated `.gitignore` & Documentation**:
+     - Added `.vercel` to `.gitignore`.
+     - Added Vercel deployment documentation to `README.md`.

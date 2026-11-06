@@ -29,6 +29,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Netlify
+# Deployment platforms
 .netlify
+.vercel
 
