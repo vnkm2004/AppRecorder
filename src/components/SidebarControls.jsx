@@ -312,7 +312,7 @@ export default function SidebarControls({
                 <label className="text-[9px] uppercase font-bold opacity-40 block mb-1.5">
                   Skin Tone Color
                 </label>
-                <div className="grid grid-cols-4 gap-1.5">
+                <div className="grid grid-cols-3 gap-1.5">
                   {HAND_SKIN_TONES.map((tone) => {
                     const isSelected = handConfig.skinTone === tone.id;
                     return (

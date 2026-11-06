@@ -474,3 +474,36 @@
      - Added `max-w-[95vw] overflow-x-auto no-scrollbar` to floating HUD in `DeviceStage.jsx`.
      - Hid desktop-only labels on small screens (`hidden sm:flex`), keeping touch-friendly buttons for 3D Spin, Reset, Glare, 100% HD, and Zoom.
 
+
+### 30. Ultra-Realistic Clean 3D Modeled Human Hand Overhaul
+- **Root Causes Identified**:
+  1. The right-hand grip pose (and dynamic pose when `yaw > 5`) detached and floated 700px to the right of the phone into the black void due to broken SVG CSS transform origin and translation arithmetic (`transformOrigin: 'bottom right', transform: 'scaleX(-1) translateX(-${phoneWidth}px)'`).
+  2. The previous hand geometry was composed of crude, low-poly 2D SVG shapes and flat gradients that appeared like cardboard cutouts, potato wedges, or cartoon stickers rather than an authentic 3D modeled human hand.
+  3. Lack of anatomical depth: absence of multi-stop subsurface scattering, joint flexion creases, authentic keratin nail anatomy (lunula, cuticle border, vascular bed, specular reflection arc), and realistic contact ambient occlusion.
+- **Solutions Implemented**:
+  1. **Complete Anatomical Re-engineering in `HandOverlay.jsx`**:
+     - **Volumetric Forearm & Wrist**: Muscular taper following the brachioradialis contour, radius bone highlight, flexor tendon definition, and soft atmospheric studio gradient fading at the bottom edge.
+     - **Sculpted Thenar Eminence (Thumb Ball)**: Rounded, volumetric muscle mound with radial illumination, deep palmar crease lines (life line), subtle subsurface scattering (warm amber/peach translucency around the skin edges), and anatomical contact occlusion shadow cast onto the rear phone casing.
+     - **Four Proportioned Rear Fingers**: Index, middle, ring, and pinky fingers curving gracefully across the back to the titanium rail, with volumetric knuckle mounds, cylindrical 3D shading, specular highlights, and interphalangeal skin creases.
+     - **Volumetric 3D Side Rail Wrapping**: Fleshy, curved cylindrical segments that wrap seamlessly across the 18px phone thickness on the 3D rails with specular crest highlights and core shadows.
+     - **Front Layer (Thumb & Fingertips)**:
+       - Soft, fleshy, anatomically correct thumb pad resting with natural ergonomic angle along the front left bezel.
+       - Realistic Keratin Fingernail: 3D convex dome shading, delicate white lunula (half-moon), natural cuticle border (eponychium), translucent pinkish nail bed, manicured off-white free edge, and glossy specular reflection arc reflecting studio lights.
+       - Subtle flexion skin creases across the thumb joint.
+       - Soft contact drop shadows cast onto the front glass screen (`feDropShadow` filter).
+       - Rounded fingertip pads curving smoothly over the opposite side rail onto the bezel rim.
+  2. **100% Mathematically Exact Mirroring**:
+     - Replaced broken CSS transforms with exact SVG coordinate space mirroring:
+       `<g transform={isMirrored ? 'translate(${pw}, 0) scale(-1, 1)' : undefined}>`
+     - Eliminates offset drift, ensuring both left and right hands are always 100% locked to the phone chassis without floating in empty space.
+  3. **Added Clean 3D Studio Clay & Obsidian Finishes**:
+     - In `devicePresets.js` and `SidebarControls.jsx`, expanded skin tone palettes to 6 options:
+       - Warm Honey (Commercial ad match)
+       - Fair / Light (Porcelain)
+       - Rich Bronze
+       - Deep Espresso
+       - Clean 3D Studio Clay (Apple keynote style matte porcelain/clay aesthetic)
+       - Clean 3D Obsidian (Sleek dark graphite 3D aesthetic)
+     - Arranged in a clean 2x3 grid in the sidebar.
+
+
