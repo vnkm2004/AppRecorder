@@ -31,6 +31,7 @@ export default function DeviceStage({
   stageRef,
   theme = 'dark',
   isRecording = false,
+  isCleanStudio = false,
   handConfig = null,
   onResetAngle = null,
 }) {
@@ -215,18 +216,18 @@ export default function DeviceStage({
         />
       )}
 
-      {/* Floating 3D Navigation Controls HUD (Hidden during recording) */}
-      {!isRecording && (
+      {/* Floating 3D Navigation Controls HUD (Hidden during recording and clean studio mode) */}
+      {!isRecording && !isCleanStudio && (
         <div
-          className={`absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center space-x-1.5 p-1.5 rounded-2xl border shadow-2xl z-30 font-mono text-xs transition-colors ${
+          className={`absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 flex items-center space-x-1 md:space-x-1.5 p-1.5 rounded-2xl border shadow-2xl z-30 font-mono text-xs transition-colors max-w-[95vw] overflow-x-auto no-scrollbar ${
             isDark
               ? 'glass-panel-dark border-white/10 text-white'
               : 'glass-panel-light border-black/10 text-neutral-900'
           }`}
         >
-          {/* Drag Hint */}
+          {/* Drag Hint (Icon only on mobile, text on sm+) */}
           <div
-            className={`flex items-center space-x-1.5 px-3 py-1 rounded-xl text-[11px] ${
+            className={`hidden sm:flex items-center space-x-1.5 px-3 py-1 rounded-xl text-[11px] shrink-0 ${
               isDark ? 'bg-white/5 text-neutral-300' : 'bg-black/5 text-neutral-700'
             }`}
           >

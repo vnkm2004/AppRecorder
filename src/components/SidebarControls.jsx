@@ -11,6 +11,7 @@ import {
   RotateCw,
   Hand,
   Sparkles,
+  X,
 } from 'lucide-react';
 import {
   DEVICE_CATEGORIES,
@@ -24,6 +25,7 @@ import {
 
 export default function SidebarControls({
   isOpen,
+  onClose,
   selectedCategory,
   setSelectedCategory,
   selectedModelId,
@@ -58,13 +60,39 @@ export default function SidebarControls({
   if (!isOpen) return null;
 
   return (
-    <aside
-      className={`w-72 h-[calc(100vh-4rem)] border-r flex flex-col overflow-y-auto text-xs z-30 transition-colors duration-200 select-none font-mono ${
-        isDark
-          ? 'glass-panel-dark border-white/10 text-neutral-200'
-          : 'glass-panel-light border-black/10 text-neutral-800'
-      }`}
-    >
+    <>
+      {/* Mobile Drawer Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+        onClick={onClose}
+      />
+
+      <aside
+        className={`fixed md:relative inset-y-0 left-0 z-50 md:z-30 w-80 max-w-[85vw] md:w-72 h-full md:h-[calc(100vh-4rem)] border-r flex flex-col overflow-y-auto text-xs transition-colors duration-200 select-none font-mono shadow-2xl md:shadow-none ${
+          isDark
+            ? 'glass-panel-dark border-white/10 text-neutral-200'
+            : 'glass-panel-light border-black/10 text-neutral-800'
+        }`}
+      >
+        {/* Mobile Header with Close button */}
+        <div
+          className={`p-3.5 border-b flex items-center justify-between md:hidden ${
+            isDark ? 'border-white/10' : 'border-black/10'
+          }`}
+        >
+          <div className="flex items-center space-x-2">
+            <Sliders className="w-4 h-4 text-cyan-400" />
+            <span className="font-bold text-xs uppercase tracking-wider">Device Studio Controls</span>
+          </div>
+          <button
+            onClick={onClose}
+            className={`p-1.5 rounded-xl border ${
+              isDark ? 'border-white/10 text-neutral-400 hover:text-white' : 'border-black/10 text-neutral-600 hover:text-black'
+            }`}
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
       {/* 1. Category Tabs */}
       <div className={`p-3 border-b ${isDark ? 'border-white/10' : 'border-black/10'}`}>
         <label className="text-[10px] font-bold uppercase tracking-wider block mb-2 opacity-50">
@@ -477,5 +505,6 @@ export default function SidebarControls({
         </label>
       </div>
     </aside>
-  );
+  </>
+);
 }

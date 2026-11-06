@@ -447,3 +447,30 @@
   3. **Universal Global Styles & Frame Container Updates**:
      - Added `.no-scrollbar` utility and enforced `display: none !important` on `iframe::-webkit-scrollbar` in `src/index.css`.
      - Added `no-scrollbar` across viewport containers in `PhoneFrame.jsx`, `TabletFrame.jsx`, `LaptopFrame.jsx`, and `DesktopFrame.jsx`.
+
+
+### 29. Mobile Responsive UI Overhaul & Mobile Clean Studio Recorder
+- **Root Cause Identified**:
+  1. `navigator.mediaDevices.getDisplayMedia` is not implemented in mobile web browsers (Android Chrome and iOS Safari) due to mobile OS privacy and sandbox restrictions. Invoking it triggered an unhandled exception alert (`Could not start screen capture: navigator.mediaDevices.getDisplayMedia is not a function`).
+  2. The navigation header and sidebar controls were originally optimized for desktop viewports (`md:`): on mobile screens (< 768px), the top bar overflowed and the static 288px sidebar occupied nearly the entire mobile viewport, leaving the 3D canvas squeezed and illegible.
+  3. The 3D phone model default scale (0.85) caused devices to clip outside mobile screen bounds.
+- **Solution Implemented**:
+  1. **Two-Row Responsive Mobile Navbar**:
+     - Transformed header into a two-row layout on mobile screens (`< md`):
+       - Row 1: Brand badge (`AR AppRecorder 3D`), sidebar controls toggle, theme toggle, video vault button, and record trigger.
+       - Row 2: Full-width, touch-friendly URL input bar with `Globe` icon, `Load` button, interactive web demos dropdown, and screenshot upload button.
+     - Preserves clean single-row 64px layout on desktop (`md:`).
+  2. **Mobile Sliding Drawer with Tap-to-Dismiss Backdrop**:
+     - Converted the sidebar into a sliding overlay drawer (`fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw]`) backed by a tap-to-dismiss backdrop (`fixed inset-0 bg-black/60 backdrop-blur-sm z-40`).
+     - Added a mobile drawer header with title and close (`X`) button.
+     - Initialized `sidebarOpen` to `false` on mobile devices (`window.innerWidth >= 768`) so the 3D stage gets 100% viewport width on mobile launch.
+  3. **Dynamic Responsive Stage Scaling**:
+     - Added `calculateFitScale(model)` in `App.jsx`: dynamically calculates a proportional scale (~0.35 to 0.58) based on mobile screen dimensions (`window.innerWidth` and `window.innerHeight`), ensuring the 3D device fits comfortably within mobile displays.
+  4. **Mobile Clean Studio Mode (`getDisplayMedia` Fallback)**:
+     - Added `canUseDisplayMedia` check in `RecordingModal.jsx` and guarded `handleStartRecord` in `App.jsx`.
+     - On mobile browsers where `getDisplayMedia` is unavailable, provides an informative explanation and **Launch Clean Studio Mode**.
+     - In Clean Studio Mode, all navbars, sidebars, and HUD elements are hidden, the 3D phone is centered in full-screen, smooth turntable rotation is started, and a floating "Exit Studio Mode" button is displayed. Users can swipe down their mobile notification shade and record pristine 4K video using the phone's native OS screen recorder without UI clutter.
+  5. **Mobile Touch-Friendly HUD**:
+     - Added `max-w-[95vw] overflow-x-auto no-scrollbar` to floating HUD in `DeviceStage.jsx`.
+     - Hid desktop-only labels on small screens (`hidden sm:flex`), keeping touch-friendly buttons for 3D Spin, Reset, Glare, 100% HD, and Zoom.
+

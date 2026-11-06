@@ -7,6 +7,8 @@ import {
   Check,
   HardDrive,
   Sparkles,
+  Smartphone,
+  Play,
 } from 'lucide-react';
 import { VIDEO_RESOLUTIONS } from '../data/devicePresets';
 
@@ -25,6 +27,10 @@ export default function RecordingModal({
   const [selectedResId, setSelectedResId] = useState('4k');
   const [fps, setFps] = useState(60);
   const [recordMode, setRecordMode] = useState('live');
+
+  const canUseDisplayMedia =
+    typeof navigator !== 'undefined' &&
+    Boolean(navigator.mediaDevices && typeof navigator.mediaDevices.getDisplayMedia === 'function');
 
   if (!isOpen) return null;
 
@@ -197,6 +203,61 @@ export default function RecordingModal({
                 <div className="w-3 h-3 rounded-sm bg-white" />
                 <span>Stop & Generate Video</span>
               </button>
+            </div>
+          </div>
+        ) : !canUseDisplayMedia ? (
+          /* STATE B: MOBILE BROWSER STUDIO RECORDER */
+          <div className="py-4 space-y-4 text-xs font-mono">
+            <div
+              className={`p-3.5 rounded-xl border flex items-start space-x-3 ${
+                isDark
+                  ? 'bg-amber-500/10 border-amber-500/25 text-amber-200'
+                  : 'bg-amber-50 border-amber-200 text-amber-900'
+              }`}
+            >
+              <Smartphone className="w-5 h-5 shrink-0 mt-0.5 text-amber-400" />
+              <div className="space-y-1">
+                <div className="font-bold text-xs">Mobile Screen Recording</div>
+                <div className="text-[11px] leading-relaxed opacity-85">
+                  Mobile browsers (Android Chrome & iOS Safari) restrict web apps from capturing the whole screen directly for security.
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="font-bold uppercase tracking-wider block opacity-50 text-[10px]">
+                Recommended Mobile Recording Method
+              </label>
+
+              <button
+                onClick={() => {
+                  onStartRecord({ mode: 'mobile-presentation' });
+                }}
+                className={`w-full p-4 rounded-xl text-left border transition-all ${
+                  isDark
+                    ? 'border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/15 text-white'
+                    : 'border-emerald-600/30 bg-emerald-50 hover:bg-emerald-100/70 text-emerald-950'
+                }`}
+              >
+                <div className="flex items-center space-x-2 font-bold text-sm">
+                  <Play className="w-4 h-4 text-emerald-400 fill-current" />
+                  <span>Launch Clean Studio Mode</span>
+                </div>
+                <div className="text-[11px] opacity-75 mt-1.5 leading-relaxed">
+                  Hides all UI, centers the 3D phone full-screen, and starts smooth auto-rotation. Swipe down your phone's notification shade to record pristine 4K video using your phone's built-in Screen Recorder!
+                </div>
+              </button>
+            </div>
+
+            <div
+              className={`p-3 rounded-xl border text-[11px] flex items-center justify-between ${
+                isDark ? 'border-white/10 bg-white/5 text-neutral-300' : 'border-black/10 bg-black/5 text-neutral-700'
+              }`}
+            >
+              <div className="space-y-0.5">
+                <div className="font-bold">Automated 4K 60FPS Video Capture</div>
+                <div className="opacity-60 text-[10px]">Supported natively on PC, Mac, and Laptop browsers.</div>
+              </div>
             </div>
           </div>
         ) : (

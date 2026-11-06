@@ -85,53 +85,109 @@ export default function Navbar({
 
   return (
     <header
-      className={`relative z-40 h-16 w-full px-4 flex items-center justify-between border-b transition-colors duration-200 select-none ${
+      className={`relative z-40 w-full px-3 md:px-4 py-2 md:py-0 md:h-16 flex flex-col md:flex-row md:items-center md:justify-between gap-2.5 md:gap-0 border-b transition-colors duration-200 select-none ${
         isDark
           ? 'glass-panel-dark border-white/10 text-white'
           : 'glass-panel-light border-black/10 text-neutral-900'
       }`}
     >
-      {/* Brand & Sidebar Toggle */}
-      <div className="flex items-center space-x-3">
-        <button
-          onClick={toggleSidebar}
-          className={`p-2 rounded-xl transition-colors ${
-            isDark ? 'glass-btn-dark' : 'glass-btn-light'
-          }`}
-          title="Toggle Controls Sidebar"
-        >
-          <Sliders className="w-4 h-4" />
-        </button>
-
-        <div className="flex items-center space-x-2">
-          <div
-            className={`w-8 h-8 rounded-xl border flex items-center justify-center font-bold font-mono text-sm ${
-              isDark
-                ? 'bg-neutral-900 border-white/20 text-white'
-                : 'bg-neutral-100 border-black/15 text-neutral-900'
+      {/* Mobile Top Row / Desktop Left Group */}
+      <div className="w-full md:w-auto flex items-center justify-between">
+        {/* Brand & Sidebar Toggle */}
+        <div className="flex items-center space-x-2.5">
+          <button
+            onClick={toggleSidebar}
+            className={`p-2 rounded-xl transition-colors ${
+              isDark ? 'glass-btn-dark' : 'glass-btn-light'
             }`}
+            title="Toggle Controls Sidebar"
           >
-            AR
-          </div>
-          <div>
-            <div className="flex items-center space-x-1.5">
-              <span className="font-bold tracking-tight text-sm font-mono">AppRecorder</span>
-              <span
-                className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
-                  isDark
-                    ? 'bg-white/10 text-neutral-300 border-white/15'
-                    : 'bg-black/5 text-neutral-700 border-black/10'
-                }`}
-              >
-                3D STUDIO
-              </span>
+            <Sliders className="w-4 h-4" />
+          </button>
+
+          <div className="flex items-center space-x-2">
+            <div
+              className={`w-7 h-7 md:w-8 md:h-8 rounded-xl border flex items-center justify-center font-bold font-mono text-xs md:text-sm ${
+                isDark
+                  ? 'bg-neutral-900 border-white/20 text-white'
+                  : 'bg-neutral-100 border-black/15 text-neutral-900'
+              }`}
+            >
+              AR
+            </div>
+            <div>
+              <div className="flex items-center space-x-1.5">
+                <span className="font-bold tracking-tight text-xs md:text-sm font-mono">AppRecorder</span>
+                <span
+                  className={`text-[9px] md:text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                    isDark
+                      ? 'bg-white/10 text-neutral-300 border-white/15'
+                      : 'bg-black/5 text-neutral-700 border-black/10'
+                  }`}
+                >
+                  3D
+                </span>
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Mobile-only Action Buttons */}
+        <div className="flex items-center space-x-1.5 md:hidden">
+          <button
+            onClick={() => setTheme(isDark ? 'light' : 'dark')}
+            className={`p-2 rounded-xl transition-colors ${
+              isDark ? 'glass-btn-dark' : 'glass-btn-light'
+            }`}
+            title={`Switch to ${isDark ? 'Light' : 'Dark'} Mode`}
+          >
+            {isDark ? <Sun className="w-4 h-4 text-neutral-300" /> : <Moon className="w-4 h-4 text-neutral-700" />}
+          </button>
+
+          <button
+            onClick={onOpenGallery}
+            className={`p-2 rounded-xl text-xs font-mono font-medium flex items-center space-x-1 transition-colors ${
+              isDark ? 'glass-btn-dark' : 'glass-btn-light'
+            }`}
+            title="Local Saved Videos Vault"
+          >
+            <Film className="w-4 h-4 opacity-70" />
+            {savedRecordingsCount > 0 && (
+              <span
+                className={`w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center ${
+                  isDark ? 'bg-white text-black' : 'bg-black text-white'
+                }`}
+              >
+                {savedRecordingsCount}
+              </span>
+            )}
+          </button>
+
+          {isRecording ? (
+            <button
+              onClick={onStopRecordClick}
+              className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-mono font-bold flex items-center space-x-1.5 shadow-lg shadow-red-600/30 animate-pulse"
+            >
+              <div className="w-2 h-2 rounded-sm bg-white" />
+              <span>Stop</span>
+            </button>
+          ) : (
+            <button
+              onClick={onStartRecordClick}
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold flex items-center space-x-1.5 shadow-md ${
+                isDark ? 'bg-white text-black' : 'bg-neutral-900 text-white'
+              }`}
+            >
+              <div className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+              <Video className="w-3.5 h-3.5" />
+              <span>Record</span>
+            </button>
+          )}
         </div>
       </div>
 
       {/* Center URL Bar & Content Switchers (100% Direct, Zero Proxy) */}
-      <div className="flex-1 max-w-2xl mx-4">
+      <div className="w-full md:flex-1 md:max-w-2xl md:mx-4">
         <form onSubmit={handleSubmit} className="relative flex items-center space-x-2">
           <div className="relative flex-1 flex items-center">
             <div
@@ -146,8 +202,8 @@ export default function Navbar({
               type="text"
               value={inputUrl}
               onChange={(e) => setInputUrl(e.target.value)}
-              placeholder="Enter website URL (e.g. servcate.com, google.com, localhost:3000)..."
-              className={`w-full h-10 pl-9 pr-24 rounded-xl text-xs font-mono border focus:outline-none transition-all ${
+              placeholder="Enter website URL (e.g. servcate.com, google.com)..."
+              className={`w-full h-9 md:h-10 pl-9 pr-24 rounded-xl text-xs font-mono border focus:outline-none transition-all ${
                 isDark
                   ? 'bg-neutral-900/90 text-neutral-100 placeholder-neutral-500 border-white/10 focus:border-white/40'
                   : 'bg-white text-neutral-900 placeholder-neutral-400 border-black/10 focus:border-black/30'
@@ -250,7 +306,7 @@ export default function Navbar({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className={`h-10 px-3 rounded-xl border flex items-center space-x-1.5 text-xs font-mono transition-colors ${
+            className={`h-9 md:h-10 px-2.5 md:px-3 rounded-xl border flex items-center space-x-1.5 text-xs font-mono transition-colors shrink-0 ${
               contentType === 'image'
                 ? isDark
                   ? 'bg-white text-black font-semibold'
@@ -262,13 +318,13 @@ export default function Navbar({
             title="Upload app screenshot or design image"
           >
             <ImageIcon className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">Screenshot</span>
+            <span className="hidden sm:inline">Screenshot</span>
           </button>
         </form>
       </div>
 
-      {/* Right Controls: Theme Toggle, Gallery, Record */}
-      <div className="flex items-center space-x-2">
+      {/* Desktop-only Right Controls: Theme Toggle, Gallery, Record */}
+      <div className="hidden md:flex items-center space-x-2">
         {/* Dark / Light Mode Toggle Button */}
         <button
           onClick={() => setTheme(isDark ? 'light' : 'dark')}

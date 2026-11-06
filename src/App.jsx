@@ -32,10 +32,22 @@ export default function App() {
   const [selectedBgId, setSelectedBgId] = useState(() =>
     theme === 'light' ? 'light-studio' : 'dark-studio'
   );
-  const [scale, setScale] = useState(0.85);
+  const calculateFitScale = (model) => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+      const fitW = (screenW * 0.82) / (model.width || 414);
+      const fitH = (screenH * 0.52) / (model.height || 874);
+      return Math.min(0.58, Math.max(0.32, +Math.min(fitW, fitH).toFixed(2)));
+    }
+    return model.defaultScale || 0.85;
+  };
+
+  const [scale, setScale] = useState(() => calculateFitScale(DEVICE_MODELS['iphone-18-pro']));
   const [showGlare, setShowGlare] = useState(true);
   const [isTurntableActive, setIsTurntableActive] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
+  const [isCleanStudio, setIsCleanStudio] = useState(false);
 
   const [handConfig, setHandConfig] = useState({
     enabled: false,
@@ -113,9 +125,7 @@ export default function App() {
     STAGE_BACKGROUNDS.find((b) => b.id === selectedBgId) || STAGE_BACKGROUNDS[0];
 
   useEffect(() => {
-    if (currentModel.defaultScale) {
-      setScale(currentModel.defaultScale);
-    }
+    setScale(calculateFitScale(currentModel));
   }, [currentModel.id]);
 
   useEffect(() => {
@@ -179,6 +189,15 @@ export default function App() {
   };
 
   const handleStartRecord = async ({ resolution, fps, bitrate, mode }) => {
+    // Mobile / Restricted browser fallback: Launch clean studio presentation mode
+    if (mode === 'mobile-presentation' || !navigator?.mediaDevices?.getDisplayMedia) {
+      setIsRecordingModalOpen(false);
+      setSidebarOpen(false);
+      setIsTurntableActive(true);
+      setIsCleanStudio(true);
+      return;
+    }
+
     if (!recorderRef.current) return;
     recorderRef.current.selectedRes = resolution;
 
@@ -210,7 +229,13 @@ export default function App() {
       console.error('Failed to start recording stream:', err);
       setIsRecordingModalOpen(true);
       if (err.name !== 'NotAllowedError') {
-        alert('Could not start screen capture: ' + (err.message || err));
+        if (err.message && err.message.includes('getDisplayMedia')) {
+          setIsCleanStudio(true);
+          setIsTurntableActive(true);
+          setIsRecordingModalOpen(false);
+        } else {
+          alert('Could not start screen capture: ' + (err.message || err));
+        }
       }
     }
   };
@@ -257,8 +282,8 @@ export default function App() {
         isDark ? 'bg-neutral-950 text-neutral-100' : 'bg-neutral-50 text-neutral-900'
       }`}
     >
-      {/* Top Navbar - Completely hidden during recording for pure device & website recording */}
-      {!isRecording && (
+      {/* Top Navbar */}
+      {!isRecording && !isCleanStudio && (
         <Navbar
           contentUrl={contentUrl}
           setUrl={handleUrlChange}
@@ -282,6 +307,19 @@ export default function App() {
         />
       )}
 
+      {/* Floating Exit Button for Clean Studio Mode */}
+      {isCleanStudio && (
+        <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
+          <button
+            onClick={() => setIsCleanStudio(false)}
+            className="px-3.5 py-2 rounded-xl bg-neutral-900/90 hover:bg-neutral-800 text-white border border-white/20 shadow-2xl flex items-center space-x-2 text-xs font-mono backdrop-blur-md transition-all active:scale-95"
+          >
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Exit Studio Mode</span>
+          </button>
+        </div>
+      )}
+
       {/* Floating Stop Pill during Active Recording */}
       {isRecording && (
         <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
@@ -300,7 +338,8 @@ export default function App() {
       {/* Main Workspace */}
       <div className="flex-1 flex overflow-hidden relative">
         <SidebarControls
-          isOpen={sidebarOpen && !isRecording}
+          isOpen={sidebarOpen && !isRecording && !isCleanStudio}
+          onClose={() => setSidebarOpen(false)}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
           selectedModelId={selectedModelId}
@@ -341,6 +380,7 @@ export default function App() {
             stageRef={stageRef}
             theme={theme}
             isRecording={isRecording}
+            isCleanStudio={isCleanStudio}
             handConfig={handConfig}
           />
         </main>
