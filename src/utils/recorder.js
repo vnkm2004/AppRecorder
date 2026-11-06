@@ -1,3 +1,5 @@
+import fixWebmDuration from 'fix-webm-duration';
+
 // High-Fidelity 4K & HD Video Recording Engine using MediaRecorder API
 // Pure client-side, zero database, zero external tracking
 
@@ -144,16 +146,27 @@ export class StudioRecorder {
         }
       };
 
-      this.mediaRecorder.onstop = () => {
+      this.mediaRecorder.onstop = async () => {
         const recordedMimeType = this.mediaRecorder?.mimeType || mimeType || 'video/webm';
-        const finalBlob = new Blob(this.chunks, {
+        const rawBlob = new Blob(this.chunks, {
           type: recordedMimeType,
         });
-        const duration = this.elapsedSeconds;
+        const durationSec = Math.max(1, this.elapsedSeconds || Math.round((Date.now() - this.startTime) / 1000));
+        const durationMs = Math.max(1000, Date.now() - this.startTime);
+
+        let finalBlob = rawBlob;
+        try {
+          if (recordedMimeType.includes('webm')) {
+            finalBlob = await fixWebmDuration(rawBlob, durationMs);
+          }
+        } catch (patchErr) {
+          console.warn('Could not patch WebM duration header:', patchErr);
+        }
+
         this.cleanup();
         this.onDataAvailable({
           blob: finalBlob,
-          duration,
+          duration: durationSec,
           mimeType: recordedMimeType,
         });
       };

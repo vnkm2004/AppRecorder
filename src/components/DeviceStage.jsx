@@ -157,13 +157,8 @@ export default function DeviceStage({
   const isDark = theme === 'dark';
   const bgClass = isDark ? stageBg.bgClassDark : stageBg.bgClassLight;
 
-  // Calculate tight scale during recording: device fills view with ~0.5cm (20px) surrounding margin
-  const tightRecordingScale = Math.min(
-    (typeof window !== 'undefined' ? window.innerWidth - 44 : 800) / (deviceModel.width || 340),
-    (typeof window !== 'undefined' ? window.innerHeight - 44 : 800) / (deviceModel.height || 700),
-    1.45
-  );
-  const activeScale = isRecording ? tightRecordingScale : scale;
+  // Preserve stable framing during recording so iframe never reloads or flashes white
+  const activeScale = scale;
 
   return (
     <div

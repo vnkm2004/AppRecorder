@@ -527,4 +527,29 @@
      - Root wrapper changed from `w-screen` to `w-full max-w-full overflow-hidden`, completely eliminating horizontal body scroll.
 
 
+### 32. Fix WebM 0-Second Duration Bug & Dual-Zone Touch-Accessible Stop Controls
+- **Root Causes Identified**:
+  1. **WebM 0-Second Duration Bug**:
+     - Standard Chromium `MediaRecorder` outputs `.webm` chunks without writing the final duration into the EBML Segment Info header.
+     - When downloaded and played in mobile media players (Android Photos, iOS Files/Safari) or Windows Media Player, the player reads duration as 0 / undefined, showing "0 sec", breaking seekability, and sometimes failing playback.
+  2. **Unreachable Stop Button on Mobile**:
+     - During active recording, the top navbar was completely hidden and the only Stop button was positioned at `fixed top-4 right-4`. On mobile screens, this area is obstructed by the device's camera notch, status bar, or browser URL bar, making it impossible for users to tap and stop recording without an Escape key.
+  3. **Iframe White Screen Flashing During Recording**:
+     - When recording started, `activeScale` previously jumped abruptly from the user's customized `scale` to `tightRecordingScale` (1.45). This sudden dimensional change caused `ResponsiveViewport` to re-measure and re-layout the iframe, causing it to display a blank white page during short recording sessions.
+- **Solutions Implemented**:
+  1. **EBML WebM Duration Header Patching with `fix-webm-duration`**:
+     - Integrated `fix-webm-duration` into `StudioRecorder.onstop`.
+     - Calculates precise recording duration in milliseconds (`Date.now() - startTime`) and rewrites the WebM EBML header with the accurate `0x4489: Duration` float before delivering the final Blob.
+     - Ensures recorded videos display accurate playback times (e.g. `00:04`, `00:15`), full timeline seekability, and seamless playback across mobile devices and desktop players.
+  2. **Dual-Zone Touch-Friendly Stop Controls in `App.jsx`**:
+     - Added a large, high-contrast, pulsating floating **Stop & Save Recording** pill centered at the bottom of the screen (`fixed bottom-6 left-1/2 -translate-x-1/2 z-50`), right where thumbs rest on mobile devices.
+     - Retained the top-right pill for desktop users, ensuring 100% reachability across any screen orientation or device.
+     - Added dual exit buttons for Clean Studio Mode.
+  3. **Preserved Stable Stage Framing in `DeviceStage.jsx`**:
+     - Removed abrupt `tightRecordingScale` jumps, keeping `activeScale = scale`.
+     - Preserves the user's framing, prevents iframe reloading, and guarantees the embedded website stays rendered without flashing white during video capture.
+     - Replaced viewport background with `bg-neutral-900` in `PhoneFrame.jsx` for clean transitions.
+
+
+
 

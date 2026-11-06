@@ -320,30 +320,59 @@ export default function App() {
 
       {/* Floating Exit Button for Clean Studio Mode */}
       {isCleanStudio && (
-        <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
-          <button
-            onClick={() => setIsCleanStudio(false)}
-            className="px-3.5 py-2 rounded-xl bg-neutral-900/90 hover:bg-neutral-800 text-white border border-white/20 shadow-2xl flex items-center space-x-2 text-xs font-mono backdrop-blur-md transition-all active:scale-95"
-          >
-            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Exit Studio Mode</span>
-          </button>
-        </div>
+        <>
+          <div className="fixed top-3 right-3 sm:top-4 sm:right-4 z-50 flex items-center space-x-2">
+            <button
+              onClick={() => setIsCleanStudio(false)}
+              className="px-3.5 py-2 rounded-xl bg-neutral-900/90 hover:bg-neutral-800 active:scale-95 text-white border border-white/20 shadow-2xl flex items-center space-x-2 text-xs font-mono backdrop-blur-md transition-all"
+            >
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Exit Studio Mode</span>
+            </button>
+          </div>
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto sm:hidden">
+            <button
+              onClick={() => setIsCleanStudio(false)}
+              className="px-5 py-2.5 rounded-full bg-neutral-900/95 active:scale-95 text-white border border-white/25 shadow-2xl flex items-center space-x-2 text-xs font-mono backdrop-blur-lg"
+            >
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Exit Studio Mode</span>
+            </button>
+          </div>
+        </>
       )}
 
-      {/* Floating Stop Pill during Active Recording */}
+      {/* Prominent Stop Controls during Active Recording (Top & Bottom for 100% Mobile Reachability) */}
       {isRecording && (
-        <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
-          <button
-            onClick={handleStopRecord}
-            className="px-4 py-2 rounded-full bg-red-600 hover:bg-red-500 text-white font-mono text-xs font-bold flex items-center space-x-2 shadow-2xl animate-pulse transition-all select-none"
-            title="Click or press Esc to Stop Recording"
-          >
-            <div className="w-2.5 h-2.5 rounded-sm bg-white" />
-            <span>Stop Recording ({formatDuration(recordingTime)})</span>
-            <span className="opacity-60 text-[10px] hidden sm:inline">[Esc]</span>
-          </button>
-        </div>
+        <>
+          {/* Top-Right Stop Pill (Desktop & Tablet) */}
+          <div className="fixed top-3 right-3 sm:top-4 sm:right-4 z-50 flex items-center space-x-2">
+            <button
+              onClick={handleStopRecord}
+              className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-mono text-xs font-bold flex items-center space-x-2 shadow-2xl border border-white/30 animate-pulse transition-all select-none"
+              title="Click or press Esc to Stop Recording"
+            >
+              <div className="w-2.5 h-2.5 rounded-sm bg-white" />
+              <span>Stop ({formatDuration(recordingTime)})</span>
+              <span className="opacity-60 text-[10px] hidden sm:inline">[Esc]</span>
+            </button>
+          </div>
+
+          {/* Bottom Centered Floating Stop Bar (Ultra-prominent & unmissable on mobile screens) */}
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center pointer-events-auto">
+            <button
+              onClick={handleStopRecord}
+              className="px-6 py-3 rounded-full bg-red-600 hover:bg-red-500 active:scale-95 text-white font-mono text-sm font-bold flex items-center space-x-2.5 shadow-2xl shadow-red-600/50 border-2 border-white/40 animate-pulse transition-all select-none cursor-pointer"
+              title="Tap to Stop Recording and Generate Video"
+            >
+              <div className="w-3.5 h-3.5 rounded-sm bg-white shrink-0" />
+              <span>Stop & Save ({formatDuration(recordingTime)})</span>
+            </button>
+            <span className="text-[10px] text-white/80 mt-1 font-mono drop-shadow bg-black/60 px-2.5 py-0.5 rounded-full select-none">
+              Tap anywhere on this button to finish
+            </span>
+          </div>
+        </>
       )}
 
       {/* Main Workspace */}
