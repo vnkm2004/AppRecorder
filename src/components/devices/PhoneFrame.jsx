@@ -271,7 +271,7 @@ export default function PhoneFrame({
           )}
 
           {/* Website Viewport Container - 100% full rectangular clearance, NO corner edges hidden */}
-          <div className="relative w-full flex-1 overflow-hidden min-h-0 bg-white">
+          <div className="relative w-full flex-1 overflow-hidden min-h-0 bg-white no-scrollbar">
             <ResponsiveViewport
               src={iframeSrc}
               srcDoc={demoHtml}

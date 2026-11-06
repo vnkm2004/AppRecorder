@@ -430,3 +430,20 @@
      - Updated `PhoneFrame.jsx`, `TabletFrame.jsx`, `LaptopFrame.jsx`, and `DesktopFrame.jsx` for consistent branding contrast and laser-etched visual fidelity.
   3. **Verified Production Build**:
      - Verified with `npm run build`, ensuring zero syntax errors and clean bundle compilation.
+
+
+### 28. Complete Elimination of Scrollbars on Devices and Embedded Websites
+- **Root Cause Identified**:
+  - In Chromium on Windows, embedding cross-origin websites inside an `iframe` causes the browser to draw its default 16px wide desktop OS scrollbar (gray thumb with arrow buttons) along the right edge of the viewport.
+  - Furthermore, previous proxy scripts injected a 4px custom scrollbar (`::-webkit-scrollbar { width: 4px }`), which caused a scrollbar track to render inside embedded sites and mockups.
+- **Solution Implemented**:
+  1. **Purged Injected Scrollbars from Proxy & Config Handlers**:
+     - Removed all visible scrollbar width and styling from `api/proxy.js`, `netlify/functions/proxy.js`, `server.js`, and `vite.config.js`.
+     - Injected `* { scrollbar-width: none !important; -ms-overflow-style: none !important; }` and `::-webkit-scrollbar { display: none !important; width: 0px !important; height: 0px !important; }`.
+  2. **Zero-Scrollbar Clipping Architecture in `ResponsiveViewport.jsx`**:
+     - Wrapped the `iframe` inside an `overflow-hidden` container and assigned `width: calc(100% + 20px)` with `marginRight: -20px`.
+     - Even when Windows Chrome renders its native OS scrollbar for cross-origin pages, the scrollbar is pushed 20px off-screen into the parent's overflow-hidden boundary, completely hiding it from view while preserving full mouse wheel and touchscreen finger scrolling.
+     - Set `scrollbarWidth: none` and `msOverflowStyle: none` on both the iframe and image container.
+  3. **Universal Global Styles & Frame Container Updates**:
+     - Added `.no-scrollbar` utility and enforced `display: none !important` on `iframe::-webkit-scrollbar` in `src/index.css`.
+     - Added `no-scrollbar` across viewport containers in `PhoneFrame.jsx`, `TabletFrame.jsx`, `LaptopFrame.jsx`, and `DesktopFrame.jsx`.

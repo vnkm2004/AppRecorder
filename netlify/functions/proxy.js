@@ -180,20 +180,16 @@ const frameScript = `
       -webkit-overflow-scrolling: touch !important;
     }
 
-    /* Modern slim mobile scrollbar that doesn't clip into corners */
+    /* 100% Invisible scrollbar for authentic mobile device mockup */
+    * {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
     ::-webkit-scrollbar {
-      width: 4px !important;
-      height: 4px !important;
-    }
-    ::-webkit-scrollbar-track {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
       background: transparent !important;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(100, 116, 139, 0.4) !important;
-      border-radius: 9999px !important;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(100, 116, 139, 0.75) !important;
     }
 
     .login-content-wrapper {

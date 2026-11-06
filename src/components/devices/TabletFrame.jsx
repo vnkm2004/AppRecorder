@@ -179,7 +179,7 @@ export default function TabletFrame({
           </div>
 
           {/* Iframe Viewport with 1024px Tablet Scaling */}
-          <div className="relative w-full flex-1 overflow-hidden min-h-0 bg-white">
+          <div className="relative w-full flex-1 overflow-hidden min-h-0 bg-white no-scrollbar">
             <ResponsiveViewport
               src={iframeSrc}
               srcDoc={demoHtml}

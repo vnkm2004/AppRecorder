@@ -66,7 +66,7 @@ export default function LaptopFrame({
             )}
 
             {/* Responsive Viewport */}
-            <div className="relative w-full h-full bg-black overflow-hidden flex-1">
+            <div className="relative w-full h-full bg-black overflow-hidden flex-1 no-scrollbar">
               <ResponsiveViewport
                 src={iframeSrc}
                 srcDoc={demoHtml}

@@ -133,7 +133,7 @@ export default function DesktopFrame({
           <div className="absolute top-2 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-neutral-900 ring-1 ring-white/10 z-30" />
 
           {/* Screen Display Area with True Desktop Viewport Scaling */}
-          <div className="relative w-full h-full bg-black rounded-[8px] overflow-hidden flex-1 flex flex-col">
+          <div className="relative w-full h-full bg-black rounded-[8px] overflow-hidden flex-1 flex flex-col no-scrollbar">
             <ResponsiveViewport
               src={iframeSrc}
               srcDoc={demoHtml}
@@ -169,18 +169,16 @@ export default function DesktopFrame({
             {/* Logo & Stand Mount Knuckle */}
             <div className="flex flex-col items-center justify-center space-y-3">
               <div
-                className={`w-12 h-12 rounded-full border flex items-center justify-center shadow-inner ${
-                  isBlack ? 'border-white/30 bg-white/10' : 'border-black/30 bg-black/5'
-                }`}
+                className={`w-12 h-12 rounded-full border flex items-center justify-center shadow-inner ${isBlack ? 'border-white/30 bg-white/10' : 'border-black/30 bg-black/5'
+                  }`}
               >
                 <div
                   className={`w-4 h-4 rounded-full ${isBlack ? 'bg-white/60' : 'bg-black/60'}`}
                 />
               </div>
               <div
-                className={`text-[10px] font-mono font-medium uppercase tracking-[0.2em] ${
-                  isBlack ? 'text-white/60' : 'text-black/60'
-                }`}
+                className={`text-[10px] font-mono font-medium uppercase tracking-[0.2em] ${isBlack ? 'text-white/60' : 'text-black/60'
+                  }`}
               >
                 AppRecorder 3D
               </div>

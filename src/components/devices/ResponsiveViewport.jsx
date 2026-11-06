@@ -371,7 +371,14 @@ export default function ResponsiveViewport({
       {/* 1. IMAGE / SCREENSHOT MODE */}
       {contentType === 'image' ? (
         localImage ? (
-          <div className="w-full h-full overflow-y-auto overflow-x-auto select-none bg-neutral-950 flex flex-col items-center" style={{ touchAction: 'pan-x pan-y' }}>
+          <div
+            className="w-full h-full overflow-y-auto overflow-x-auto no-scrollbar select-none bg-neutral-950 flex flex-col items-center"
+            style={{
+              touchAction: 'pan-x pan-y',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
+          >
             <img
               src={localImage}
               alt="Device Screen Display"
@@ -408,28 +415,33 @@ export default function ResponsiveViewport({
           </div>
         )
       ) : (
-        /* 2. LIVE IFRAME & INTERACTIVE DEMO MODE (100% DIRECT) */
+        /* 2. LIVE IFRAME & INTERACTIVE DEMO MODE (100% DIRECT, ZERO SCROLLBAR) */
         dimensions.width > 0 && (
-          <iframe
-            ref={iframeRef}
-            onLoad={handleIframeLoad}
-            title="Responsive Viewport Content"
-            src={contentType !== 'demo' ? src : undefined}
-            srcDoc={contentType === 'demo' ? srcDoc : undefined}
-            className="border-0 select-auto block"
-            style={{
-              width: isNative ? '100%' : `${viewportWidth}px`,
-              height: isNative ? '100%' : `${scaledHeight}px`,
-              transform: isNative ? 'none' : `scale(${scale})`,
-              transformOrigin: 'top left',
-              pointerEvents: 'auto',
-              imageRendering: '-webkit-optimize-contrast',
-              WebkitFontSmoothing: 'antialiased',
-              textRendering: 'optimizeLegibility',
-            }}
-            allow="geolocation; camera; microphone; clipboard-read; clipboard-write; accelerometer; gyroscope; fullscreen"
-            loading="eager"
-          />
+          <div className="w-full h-full overflow-hidden relative">
+            <iframe
+              ref={iframeRef}
+              onLoad={handleIframeLoad}
+              title="Responsive Viewport Content"
+              src={contentType !== 'demo' ? src : undefined}
+              srcDoc={contentType === 'demo' ? srcDoc : undefined}
+              className="border-0 select-auto block no-scrollbar"
+              style={{
+                width: isNative ? 'calc(100% + 20px)' : `${viewportWidth + 20}px`,
+                height: isNative ? '100%' : `${scaledHeight}px`,
+                marginRight: '-20px',
+                transform: isNative ? 'none' : `scale(${scale})`,
+                transformOrigin: 'top left',
+                pointerEvents: 'auto',
+                imageRendering: '-webkit-optimize-contrast',
+                WebkitFontSmoothing: 'antialiased',
+                textRendering: 'optimizeLegibility',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+              allow="geolocation; camera; microphone; clipboard-read; clipboard-write; accelerometer; gyroscope; fullscreen"
+              loading="eager"
+            />
+          </div>
         )
       )}
 
