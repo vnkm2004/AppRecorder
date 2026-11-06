@@ -1,0 +1,8 @@
+1: Don't use emojis anywhere instead use suitable svg icons.
+2: Try to use optimized code.
+3: No database needed, all recordings, presets, and history must be stored locally (IndexedDB / localStorage).
+4: Provide realistic device models (Mobile, Desktop, Laptop, Tablet) with various material finishes (Titanium, Midnight, Space Black, Silver, Glass).
+5: Allow user to download 4K or HD videos without external screen recording using in-app record.
+6: Check problems after completing each task and fix them.
+7: Keep track of changes and completed tasks in claude.md.
+
