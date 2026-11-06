@@ -386,3 +386,13 @@
      - Injected active `touchstart`, `touchmove`, and `touchend` listeners inside the proxy scripts, allowing finger swipes to directly scroll horizontal carousels and vertical lists inside proxied pages.
   4. **Enforced Horizontal Touch Action**:
      - Injected `touch-action: pan-x pan-y !important` and `-webkit-overflow-scrolling: touch !important` across `html`, `body`, and all `[class*="overflow-x"]` containers, preventing touch suppression.
+
+
+### 25. Git Repository Initialization & GitHub Remote Deployment
+- **Task Executed**:
+  1. Initialized an isolated git repository inside `AppRecorder` to prevent parent directory traversal.
+  2. Configured `.gitignore` to protect against unintentional staging of build artifacts, dependencies, and environment files (`.env*`, `node_modules`, `dist`, `.netlify`).
+  3. Staged all core codebase files, assets, configurations, and documentation.
+  4. Created root commit on `main` branch.
+  5. Configured remote `origin` pointing to `https://github.com/vnkm2004/AppRecorder.git`.
+  6. Successfully pushed `main` branch with upstream tracking to GitHub.
